@@ -73,6 +73,16 @@
       "updatedAt": "2026-05-05"
     },
     {
+      "id": "cloud-run",
+      "path": "_study/cloud-run.md",
+      "title": "Cloud Run と Cloud Run Jobs",
+      "description": "Cloud Run（HTTP サーバー型）と Cloud Run Jobs（バッチ型）の違い・Gemini アプリのデプロイパターン（Streamlit/Quart/Mesop/GPU 推論）・Cloud Run Jobs の並列シャーディング（CLOUD_RUN_TASK_INDEX/COUNT）・Secret Manager マウント・distroless イメージ・DryRun パターン",
+      "tags": ["Cloud Run", "Cloud Run Jobs", "デプロイ", "Dockerfile", "GPU", "バッチ処理"],
+      "industry": ["IT"],
+      "topics": ["gcloud run deploy", "Streamlit", "Quart", "Ollama", "vLLM", "ADK", "CLOUD_RUN_TASK_INDEX", "CLOUD_RUN_TASK_COUNT", "distroless", "Secret Manager", "Cloud Scheduler", "シャーディング"],
+      "updatedAt": "2026-05-05"
+    },
+    {
       "id": "chunking-and-extractive-content",
       "path": "_study/chunking-and-extractive-content.md",
       "title": "Chunking と Extractive Content（VAIS での文書分割と回答抽出）",
