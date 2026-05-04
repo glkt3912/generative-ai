@@ -73,6 +73,36 @@
       "updatedAt": "2026-05-05"
     },
     {
+      "id": "chunking-and-extractive-content",
+      "path": "_study/chunking-and-extractive-content.md",
+      "title": "Chunking と Extractive Content（VAIS での文書分割と回答抽出）",
+      "description": "インジェスト時の Chunk Mode 設定（chunkSize・includeAncestorHeadings・パーサー選択）・チャンク内部構造の確認 API・BYOC（Bring Your Own Chunks）・クエリ時の Snippet/Extractive Answer/Extractive Segment/LLM Summary の4種類の違いと ContentSearchSpec の実装",
+      "tags": ["Chunking", "Extractive Answer", "Extractive Segment", "Snippet", "BYOC", "ContentSearchSpec"],
+      "industry": ["IT"],
+      "topics": ["chunkSize", "includeAncestorHeadings", "layoutParsingConfig", "PARSED_DOCUMENT", "CHUNKED_DOCUMENT", "ExtractiveContentSpec", "SnippetSpec", "SummarySpec", "BYOC", "LangChain", "VertexAISearchRetriever"],
+      "updatedAt": "2026-05-05"
+    },
+    {
+      "id": "video-bigquery-vais-pipeline",
+      "path": "_study/video-bigquery-vais-pipeline.md",
+      "title": "GCS動画 → BigQuery構造化 → Vertex AI Search パイプライン",
+      "description": "BigQuery ObjectRef + AI.GENERATE_TABLE による動画構造化・Batch Prediction による大量動画の一括処理・BigQuerySource で VAIS Datastore へのインポート・Cloud Functions によるイベント駆動自動更新・構造化フィールドを活用したブースティング・フィルタリング",
+      "tags": ["BigQuery", "ObjectRef", "Vertex AI Search", "動画", "パイプライン", "Batch Prediction", "Cloud Functions"],
+      "industry": ["IT"],
+      "topics": ["ObjectRef", "AI.GENERATE_TABLE", "AI.GENERATE_BOOL", "AI.GENERATE", "BatchPredictionJob", "BigQuerySource", "ImportDocumentsRequest", "Cloud Functions", "discoveryengine", "BoostSpec"],
+      "updatedAt": "2026-05-05"
+    },
+    {
+      "id": "vertex-ai-search",
+      "path": "_study/vertex-ai-search.md",
+      "title": "Vertex AI Search（VAIS）",
+      "description": "Datastore 種別（非構造化/Web/構造化）・Search Engine の作成と接続・GCS/インラインインジェスト・パーシング&チャンキング設定・フィルタリング/ブースティング/ファセット・Gemini Grounding 統合・Gemini Enterprise の AnswerQuery API・RAG Engine との使い分け",
+      "tags": ["Vertex AI Search", "VAIS", "検索", "discoveryengine", "RAG", "Grounding"],
+      "industry": ["IT"],
+      "topics": ["DataStore", "SearchEngine", "ServingConfig", "discoveryengine", "Boosting", "Filtering", "Facets", "LayoutParser", "InlineIngestion", "VertexAISearch", "AnswerQuery", "GeminiEnterprise", "DataBlending"],
+      "updatedAt": "2026-05-05"
+    },
+    {
       "id": "glossary",
       "path": "_study/glossary.md",
       "title": "用語集（Gemini / Vertex AI の概念・型一覧）",
