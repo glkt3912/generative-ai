@@ -1,0 +1,86 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-05-05",
+  "documents": [
+    {
+      "id": "architecture",
+      "path": "_study/architecture.md",
+      "title": "Gemini on Google Cloud アーキテクチャ全体像",
+      "description": "リポジトリの全体構成・2つの SDK（Gen AI SDK / Vertex AI SDK）の住み分け・ディレクトリ構成と役割・Gemini モデル系列一覧・各詳細ドキュメントへのリンク",
+      "tags": ["アーキテクチャ", "概要", "SDK", "Vertex AI", "Gemini"],
+      "industry": ["IT"],
+      "topics": ["Gemini", "Vertex AI", "Gen AI SDK", "モデル系列", "ディレクトリ構成", "Agent Platform"],
+      "updatedAt": "2026-05-05"
+    },
+    {
+      "id": "gemini-models",
+      "path": "_study/gemini-models.md",
+      "title": "Gemini モデル系列（Flash / Pro / Ultra の選び方）",
+      "description": "Flash/Pro/Lite 各モデルの速度・精度・コスト比較・モデル選択フローチャート・コンテキストウィンドウサイズ・バージョン指定のベストプラクティス・Gemini 3.x の状況",
+      "tags": ["モデル", "Flash", "Pro", "Lite", "コスト"],
+      "industry": ["IT"],
+      "topics": ["gemini-2.0-flash", "gemini-2.5-pro", "gemini-2.5-flash", "トークン", "コンテキストウィンドウ", "バージョン管理"],
+      "updatedAt": "2026-05-05"
+    },
+    {
+      "id": "function-calling",
+      "path": "_study/function-calling.md",
+      "title": "Function Calling（ツール連携の仕組み）",
+      "description": "Function Calling の全体フロー・FunctionDeclaration の定義方法・3つのモード（AUTO/ANY/NONE）・並列 Function Calling・Python 型アノテーションからの自動生成・SQL Talk パターン",
+      "tags": ["Function Calling", "ツール", "並列", "JSON Schema"],
+      "industry": ["IT"],
+      "topics": ["FunctionDeclaration", "Tool", "ToolConfig", "FunctionCall", "FunctionResponse", "parallel", "SQL", "AUTO", "ANY", "NONE"],
+      "updatedAt": "2026-05-05"
+    },
+    {
+      "id": "agents",
+      "path": "_study/agents.md",
+      "title": "Agents & Reasoning Engine（エージェント構築と Agent Platform）",
+      "description": "ReAct ループの動作原理・DIY ReAct エージェントの最小実装・Reasoning Engine へのデプロイ手順・マルチエージェント構成・Always-on Memory Agent・用途別の選択基準",
+      "tags": ["Agent", "Reasoning Engine", "ReAct", "マルチエージェント", "Memory"],
+      "industry": ["IT"],
+      "topics": ["ReasoningEngine", "Queryable", "ReAct", "Orchestrator", "Memory", "LangChain", "Agent Platform", "デプロイ"],
+      "updatedAt": "2026-05-05"
+    },
+    {
+      "id": "context-caching",
+      "path": "_study/context-caching.md",
+      "title": "Context Caching（コンテキストキャッシュによるコスト最適化）",
+      "description": "キャッシュの仕組みとコスト削減効果（75% OFF）・CachedContent の作成・更新・削除・TTL の設計指針・キャッシュ可能なコンテンツ種別・長大コードベース分析への活用・コスト計算の注意点",
+      "tags": ["Context Caching", "コスト最適化", "TTL", "トークン"],
+      "industry": ["IT"],
+      "topics": ["CachedContent", "TTL", "GCS", "token", "cost", "32K", "1時間", "ストレージ課金"],
+      "updatedAt": "2026-05-05"
+    },
+    {
+      "id": "grounding",
+      "path": "_study/grounding.md",
+      "title": "Grounding & RAG（検索グラウンディングと検索拡張生成）",
+      "description": "Google Search Grounding と RAG Grounding の2種類・RAG の全体フロー（インデックス構築→検索→生成）・Vertex AI RAG Engine の実装・Embeddings モデルの選択・引用メタデータの UI 表示・用途別の選択基準",
+      "tags": ["Grounding", "RAG", "Google Search", "Embeddings", "Vector Search"],
+      "industry": ["IT"],
+      "topics": ["GoogleSearchRetrieval", "GroundingMetadata", "RAG", "RagCorpus", "TextEmbeddingModel", "text-embedding-005", "Vector Search", "チャンキング"],
+      "updatedAt": "2026-05-05"
+    },
+    {
+      "id": "thinking",
+      "path": "_study/thinking.md",
+      "title": "Thinking モード（思考署名と推論強化）",
+      "description": "思考署名（Thought Signatures）の仕組み・thinking_budget の設定指針（0〜-1）・思考過程 Part の取得方法・マルチターンでの思考引き継ぎ・数学・コード生成への活用・Thinking 対応モデル一覧・コスト計算",
+      "tags": ["Thinking", "推論", "思考署名", "System2"],
+      "industry": ["IT"],
+      "topics": ["ThinkingConfig", "thinking_budget", "thought", "ThoughtSignature", "gemini-2.5-flash", "gemini-2.5-pro", "thoughts_token_count"],
+      "updatedAt": "2026-05-05"
+    },
+    {
+      "id": "glossary",
+      "path": "_study/glossary.md",
+      "title": "用語集（Gemini / Vertex AI の概念・型一覧）",
+      "description": "SDK 基本型（GenerativeModel/ChatSession/Part/Content）・Function Calling 関連型・Grounding/RAG 関連型・Thinking 関連概念・Context Caching 関連・Agents 関連・モデル料金関連・Vertex AI インフラ用語",
+      "tags": ["用語集", "型", "SDK", "概念"],
+      "industry": ["IT"],
+      "topics": ["GenerativeModel", "ChatSession", "Part", "FunctionDeclaration", "GroundingMetadata", "CachedContent", "ReasoningEngine", "temperature", "token", "ADC"],
+      "updatedAt": "2026-05-05"
+    }
+  ]
+}
