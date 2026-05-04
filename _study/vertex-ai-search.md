@@ -402,6 +402,66 @@ def get_answer(project_id, location, engine_id, query):
 
 ---
 
+## 運用上の注意点
+
+### Tier と有効な機能の対応
+
+機能によって必要な Tier が異なる。Datastore 作成後に Tier 変更は可能だが、
+Standard → Enterprise へのアップグレードは即時反映されない場合がある。
+
+| 機能 | Standard Tier | Enterprise Tier | Enterprise + LLM Add-on |
+|-----|:---:|:---:|:---:|
+| 基本検索・Snippet | ✓ | ✓ | ✓ |
+| Extractive Answer / Segment | ✗ | ✓ | ✓ |
+| LLM Summary（Gemini 要約） | ✗ | ✗ | ✓ |
+| Gemini Enterprise（AnswerQuery） | ✗ | ✗ | ✓ |
+
+### 変更不可の設定
+
+作成後に変更できない設定は事前に確定させる。変更したい場合は Datastore を作り直す必要がある。
+
+| 設定 | 変更可否 |
+|-----|---------|
+| Datastore の種別（非構造化/Web/構造化） | **不可** |
+| Datastore のロケーション（global/us/eu） | **不可** |
+| Chunk Mode の有効/無効 | **不可** |
+| chunkSize | **不可** |
+
+### インデックス更新のタイムラグ
+
+`import_documents` を呼んでも検索に反映されるまで時間がかかる。
+
+```python
+# import_documents はロングランニングオペレーション（LRO）を返す
+# .result() で完了を待てるが、検索への反映はさらに数分かかることがある
+operation = client.import_documents(request=...)
+operation.result()  # インポート処理完了を待つ
+
+# Engine 作成直後も同様
+# "404 Engine is not found" が返る場合は数分待ってからクエリを再実行する
+```
+
+### クォータ・レート制限
+
+| 制限 | 目安 |
+|-----|-----|
+| SearchRequest のレート | プロジェクトあたり 600 QPM（デフォルト） |
+| ImportDocuments の同時実行 | Datastore あたり 1 オペレーション |
+| インラインインジェストのペイロード | 1リクエストあたり 100MB 以下 |
+
+超過時は `429 Resource Exhausted` が返る。指数バックオフでリトライする。
+
+### データ鮮度の管理
+
+| モード | 挙動 | 使いどき |
+|--------|------|---------|
+| `INCREMENTAL` | 新規・更新分だけ追加。削除は反映されない | 追記が多い場合 |
+| `FULL` | 全件洗い替え。削除も反映される | 定期的な完全同期 |
+
+ドキュメントを削除したい場合は `FULL` モードで再インポートするか、`delete_document` API を個別に呼ぶ。
+
+---
+
 ## 主要リソース（このリポジトリ内）
 
 | ファイル | 内容 |

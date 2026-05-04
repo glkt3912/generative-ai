@@ -264,6 +264,48 @@ Q. 精度を上げるためにチャンク分割を最適化したい？
 
 ---
 
+## 運用上の注意点
+
+### Chunk Mode は作成後に変更不可
+
+チャンク設定（`chunkSize`・`includeAncestorHeadings`・パーサー種別）は Datastore 作成時に確定する。
+変更したい場合は Datastore を削除して作り直す必要がある。
+本番移行前に小規模なデータで精度を確認してから設定を決める。
+
+### Extractive Answer / Segment は Enterprise Tier 必須
+
+Standard Tier で `max_extractive_answer_count > 0` を指定するとエラーではなく**空のリストが返る**（サイレント失敗）。
+「Extractive Answer が返ってこない」場合は Tier を最初に確認する。
+
+```python
+# Tier の確認（コンソール or API）
+# Datastore の詳細画面 > 「検索層」が "Enterprise" になっているか確認
+
+# サイレント失敗の例
+extractive_answers = data.get("extractive_answers", [])
+# → Standard Tier だと常に [] が返る。エラーは出ない。
+```
+
+### chunkSize の選び方
+
+小さすぎると文脈が途切れ、大きすぎると Gemini のコンテキストを無駄に占有する。
+
+| chunkSize | 向いているケース |
+|-----------|--------------|
+| 200〜300 | 短い FAQ・箇条書き中心のドキュメント |
+| **500（推奨）** | 一般的な社内文書・マニュアル |
+| 800〜1000 | 長い段落・技術文書・法律文書 |
+
+`includeAncestorHeadings: True` を使うと見出し情報がチャンクに付加されるため、
+「どの章の内容か」の文脈が保たれ、Extractive Answer の精度が上がる。
+
+### BYOC のトークン制限
+
+自前チャンクを投入する場合、Datastore 作成時に指定した `chunkSize` を超えるチャンクは**インポートエラーになる**。
+編集後のチャンクが元の `chunkSize` 以下に収まっているか事前に確認する。
+
+---
+
 ## 主要リソース（このリポジトリ内）
 
 | ファイル | 内容 |

@@ -532,6 +532,92 @@ urgency_score でブースト・category でフィルタ + Gemini 要約（ス�
 
 ---
 
+## 運用上の注意点
+
+### BigQuery のコスト管理
+
+`AI.GENERATE_TABLE` はテーブルの全行を Gemini に送るため、大規模テーブルではコストが急増する。
+
+```sql
+-- WHERE で処理対象を絞ってからAI関数を呼ぶ（全件スキャンを避ける）
+SELECT ticket_id, urgency_score
+FROM AI.GENERATE_TABLE(
+  MODEL `my_dataset.gemini`,
+  (
+    SELECT prompt, ticket_id
+    FROM `my_dataset.reports_mm`
+    WHERE processed = FALSE   -- ← 未処理分だけに絞る
+      AND created_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 DAY)
+  ),
+  STRUCT("urgency_score INT64" AS output_schema)
+);
+```
+
+`AI.GENERATE` 系は実行前に **「このクエリは X GB を処理します」** と BQ Studio に表示される。
+金額を確認してから実行する習慣をつける。
+
+### GCS ファイルと ObjectRef の整合性
+
+ObjectRef はあくまで GCS への住所。**GCS のファイルを削除すると ObjectRef の参照が壊れる**。
+
+```
+NG: GCS のファイルを先に削除 → AI.GENERATE_TABLE 実行 → エラー
+OK: AI.GENERATE_TABLE で構造化完了 → BQ テーブルに結果保存 → その後 GCS を削除
+```
+
+### Batch Prediction の失敗時の対処
+
+ジョブが `has_ended = True` かつ `has_succeeded = False` の場合、部分的な結果は BQ に書き込まれていることがある。
+
+```python
+if not job.has_succeeded:
+    print(f"失敗理由: {job.error}")
+    # 出力テーブルに部分的な結果が残っている可能性がある
+    # 再実行する前に OUTPUT_URI テーブルを確認・削除する
+
+# 失敗した入力行だけ再実行するには:
+# 1. batch_results テーブルと batch_requests テーブルを JOIN して未処理行を抽出
+# 2. 未処理行だけで新しい Batch Prediction ジョブを起動
+```
+
+### BQ テーブルの肥大化防止
+
+`AI.GENERATE_TABLE` の結果テーブルは **明示的に削除するまで課金が続く**。
+不要になったテーブルは定期的に削除するか、expiration を設定する。
+
+```sql
+-- テーブル作成時に有効期限を設定（90日後に自動削除）
+CREATE OR REPLACE TABLE `my_dataset.batch_results`
+OPTIONS (
+  expiration_timestamp = TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL 90 DAY)
+)
+AS SELECT ...;
+```
+
+### Cloud Functions のタイムアウト
+
+`import_documents` は LRO（長時間オペレーション）であり、完了まで数分かかることがある。
+Cloud Functions のデフォルトタイムアウト（60秒）では足りない場合がある。
+
+```python
+# Cloud Functions の settings（デプロイ時に指定）
+# --timeout=540  # 最大 540秒（9分）に延長
+# --memory=512MB
+
+@functions_framework.cloud_event
+def update_search_index(cloud_event):
+    operation = client.import_documents(request=...)
+    # operation.result() はブロッキング呼び出し
+    # タイムアウトを設定してタイムアウト時もエラーにならないようにする
+    try:
+        operation.result(timeout=480)  # 8分で打ち切り
+    except Exception as e:
+        print(f"Import timed out or failed: {e}")
+        # Pub/Sub 等で後続処理に通知する設計が望ましい
+```
+
+---
+
 ## 主要リソース（このリポジトリ内）
 
 | ファイル | ステップ | 内容 |
